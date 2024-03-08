@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Variables
+INSTANCE_TYPE="t2.micro"
+AMI_ID="ami-0f403e3180720dd7e"
+KEY_NAME="TestKeyPairForNodeJS"
+SECURITY_GROUP="TestSGForNodeJS"
+
+# User data script to install Node.js v18.x
+USER_DATA=$(cat <<'EOF'
+#!/bin/bash
+curl -fsSL https://rpm.nodesource.com/setup_18.x | sudo bash -
+sudo yum install -y nodejs
+EOF
+)
+
+rm $KEY_NAME.pem
+# Create a key pair
+aws ec2 create-key-pair --key-name $KEY_NAME --query 'KeyMaterial' --output text --no-cli-pager >> $KEY_NAME.pem
+chmod 400 $KEY_NAME.pem
+
+# Create a SG
+GROUP_ID=$(aws ec2 create-security-group --group-name $SECURITY_GROUP --description "Test security group for NodeJS18" --query 'GroupId' --output text --no-cli-pager)
+aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0 --no-cli-pager
+aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0 --no-cli-pager
+
+
+# Launch EC2 instance with the user data script
+INSTANCE_ID=$(aws ec2 run-instances \
+    --image-id $AMI_ID \
+    --instance-type $INSTANCE_TYPE \
+    --key-name $KEY_NAME \
+    --security-groups $SECURITY_GROUP \
+    --user-data "$USER_DATA" \
+    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Node18Instance}]' \
+    --query 'Instances[0].InstanceId' \
+    --output text \
+    --no-cli-pager)
+
+echo "EC2 instance created with id $INSTANCE_ID"
+
+aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+
+echo "Instance started"
+
+aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
+
+echo "Instance init finished"
+
+PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+
+echo "You can connect to your instance by using this command:"
+echo "ssh -i $KEY_NAME.pem ec2-user@$PUBLIC_IP"
