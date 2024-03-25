@@ -21,7 +21,7 @@ chmod 400 $KEY_NAME.pem
 
 # Create a SG
 GROUP_ID=$(aws ec2 create-security-group --group-name $SECURITY_GROUP --description "Test security group for NodeJS18" --query 'GroupId' --output text --no-cli-pager)
-aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 80 --cidr 0.0.0.0/0 --no-cli-pager
+aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 8080 --cidr 0.0.0.0/0 --no-cli-pager
 aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0 --no-cli-pager
 
 
