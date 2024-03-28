@@ -15,5 +15,6 @@ else
         \"url\": \"http://${IP}:8080\",
     }}"
 
+    echo "Saving outputs to ${SMP_OUTPUT_PATH}"
     echo $output_params > "${SMP_OUTPUT_PATH}"
 fi
