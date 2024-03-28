@@ -1,10 +1,10 @@
 #!/bin/bash
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_CONNECTION_STRING -i $SSH_KEY "DOWNLOAD_URL='$DOWNLOAD_URL'" 'bash -s' <<EOF
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_CONNECTION_STRING -i $SSH_KEY "DOWNLOAD_URL='$DOWNLOAD_URL'" 'bash -s' <<'EOF'
 curl -o suri.zip -L $DOWNLOAD_URL
 unzip suri.zip -d app
 cd app/$(ls app)
 npm install
-nohup npm run dev -- --port 8080 &
+nohup npm run dev -- --port 8080 > /dev/null 2>&1 &
 EOF
 
 # write to provided env var if available for SMP integration
