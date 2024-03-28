@@ -11,7 +11,9 @@ EOF
 if [ -z "${SMP_OUTPUT_PATH}" ]; then
     echo "No output for SMP"
 else
-    output_params="{}"
+    output_params="{ \"output_params\": {
+        \"url\": \"http://${IP}:8080\",
+    }}"
 
     echo $output_params > "${SMP_OUTPUT_PATH}"
 fi
