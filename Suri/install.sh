@@ -12,7 +12,7 @@ if [ -z "${SMP_OUTPUT_PATH}" ]; then
     echo "No output for SMP"
 else
     output_params="{ \"output_params\": {
-        \"url\": \"http://${IP}:8080\",
+        \"url\": \"http://${IP}:8080\"
     }}"
 
     echo "Saving outputs to ${SMP_OUTPUT_PATH}"
