@@ -8,7 +8,7 @@ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_CONNECTION_
 curl -o suri.zip -L $DOWNLOAD_URL
 unzip suri.zip -d app
 cd app/$(ls app)
-[ -f "~/config.json" ] && cp ~/config.json ./src/links.json
+[ -f ~/config.json ] && cp ~/config.json ./src/links.json
 npm install
 nohup npm run dev -- --port 8080 > /dev/null 2>&1 &
 EOF
