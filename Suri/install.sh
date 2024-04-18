@@ -1,7 +1,7 @@
 #!/bin/bash
 # copy config file if provided
-if [ -n "${JSON_CONFIG_FILE}" ]; then
-    scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY $JSON_CONFIG_FILE "$SSH_CONNECTION_STRING":~/config.json
+if [ -n "${SURI_INSTALL_LINKS_CONFIG}" ]; then
+    scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY $SURI_INSTALL_LINKS_CONFIG "$SSH_CONNECTION_STRING":~/config.json
 fi
 
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_CONNECTION_STRING -i $SSH_KEY "DOWNLOAD_URL='$DOWNLOAD_URL'" 'bash -s' <<'EOF'
