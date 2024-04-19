@@ -22,7 +22,7 @@ aws ec2 create-key-pair \
     --output text \
     --no-cli-pager >> $KEY_NAME.pem
 # Get the key pair id
-KEY_PAIR_ID = $(aws ec2 describe-key-pairs --query "KeyPairs[?KeyName=='$KEY_NAME'].KeyPairId" --output text)
+KEY_PAIR_ID=$(aws ec2 describe-key-pairs --query "KeyPairs[?KeyName=='$KEY_NAME'].KeyPairId" --output text)
 # Tag the key pair
 aws ec2 create-tags \
     --resource $KEY_PAIR_ID \
@@ -48,7 +48,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --key-name $KEY_NAME \
     --security-groups $SECURITY_GROUP \
     --user-data "$USER_DATA" \
-    --tag-specifications "ResourceType=instance,Tags=[{Key=name,Value=Node18Instance},{Key=project,Value=$SPM_PROJECT},{Key=env,Value=$SPM_ENV}]" \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$SPM_PROJECT-$SPM_ENV-Node18Instance},{Key=project,Value=$SPM_PROJECT},{Key=env,Value=$SPM_ENV}]" \
     --query 'Instances[0].InstanceId' \
     --output text \
     --no-cli-pager)
