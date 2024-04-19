@@ -3,8 +3,8 @@
 # Variables
 INSTANCE_TYPE="t2.micro"
 AMI_ID="ami-0f403e3180720dd7e"
-KEY_NAME="TestKeyPairForNodeJS"
-SECURITY_GROUP="TestSGForNodeJS"
+KEY_NAME="$SPM_PROJECT-$SPM_ENV-KeyPairForNodeJS"
+SECURITY_GROUP="$SPM_PROJECT-$SPM_ENV-SGForNodeJS"
 
 # User data script to install Node.js v18.x
 USER_DATA=$(cat <<'EOF'
@@ -16,11 +16,27 @@ EOF
 
 rm $KEY_NAME.pem
 # Create a key pair
-aws ec2 create-key-pair --key-name $KEY_NAME --query 'KeyMaterial' --output text --no-cli-pager >> $KEY_NAME.pem
+aws ec2 create-key-pair \
+    --key-name $KEY_NAME \
+    --query 'KeyMaterial' \
+    --output text \
+    --no-cli-pager >> $KEY_NAME.pem
+# Get the key pair id
+KEY_PAIR_ID = $(aws ec2 describe-key-pairs --query "KeyPairs[?KeyName=='$KEY_NAME'].KeyPairId" --output text)
+# Tag the key pair
+aws ec2 create-tags \
+    --resource $KEY_PAIR_ID \
+    --tags "Key=project,Value=$SPM_PROJECT" "Key=env,Value=$SPM_ENV"
 chmod 400 $KEY_NAME.pem
 
 # Create a SG
-GROUP_ID=$(aws ec2 create-security-group --group-name $SECURITY_GROUP --description "Test security group for NodeJS18" --query 'GroupId' --output text --no-cli-pager)
+GROUP_ID=$(aws ec2 create-security-group \
+    --group-name $SECURITY_GROUP \
+    --description "Test security group for NodeJS18" \
+    --query 'GroupId' \
+    --output text \
+    --tag-specifications "ResourceType=security-group,Tags=[{Key=project,Value=${SPM_PROJECT}},{Key=env,Value=${SPM_ENV}}]" \
+    --no-cli-pager)
 aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 8080 --cidr 0.0.0.0/0 --no-cli-pager
 aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0 --no-cli-pager
 
@@ -32,7 +48,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --key-name $KEY_NAME \
     --security-groups $SECURITY_GROUP \
     --user-data "$USER_DATA" \
-    --tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=Node18Instance}]' \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=name,Value=Node18Instance},{Key=project,Value=$SPM_PROJECT},{Key=env,Value=$SPM_ENV}]" \
     --query 'Instances[0].InstanceId' \
     --output text \
     --no-cli-pager)
