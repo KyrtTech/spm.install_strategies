@@ -84,6 +84,18 @@ class RedisAwsStack extends Stack {
     Tags.of(this).add("env", envTag);
     Tags.of(this).add("managed-by", "SPM");
 
+    // Output the Redis instance dns
+    const instanceDNS = new CfnOutput(this, "RedisHost", {
+      value: instance.instancePrivateDnsName,
+      description: "The Redis host",
+    });
+
+    // Redis port
+    new CfnOutput(this, "RedisPort", {
+      value: 6379,
+      description: "The Redis port",
+    });
+
     // Output the Redis credentials
     new CfnOutput(this, "RedisUsernameOutput", {
       value: redisUsername,
