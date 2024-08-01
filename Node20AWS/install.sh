@@ -26,7 +26,7 @@ KEY_PAIR_ID=$(aws ec2 describe-key-pairs --query "KeyPairs[?KeyName=='$KEY_NAME'
 # Tag the key pair
 aws ec2 create-tags \
     --resource $KEY_PAIR_ID \
-    --tags "Key=project,Value=$SPM_PROJECT" "Key=env,Value=$SPM_ENV"
+    --tags "Key=project,Value=$SPM_PROJECT" "Key=env,Value=$SPM_ENV" "Key=managed-by,Value=SPM"
 chmod 400 $KEY_NAME.pem
 
 # Create a SG
@@ -35,7 +35,7 @@ GROUP_ID=$(aws ec2 create-security-group \
     --description "Test security group for NodeJS20" \
     --query 'GroupId' \
     --output text \
-    --tag-specifications "ResourceType=security-group,Tags=[{Key=project,Value=${SPM_PROJECT}},{Key=env,Value=${SPM_ENV}}]" \
+    --tag-specifications "ResourceType=security-group,Tags=[{Key=project,Value=${SPM_PROJECT}},{Key=env,Value=${SPM_ENV}},{Key=managed-by,Value=SPM}]" \
     --no-cli-pager)
 aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 8080 --cidr 0.0.0.0/0 --no-cli-pager
 aws ec2 authorize-security-group-ingress --group-id $GROUP_ID --protocol tcp --port 22 --cidr 0.0.0.0/0 --no-cli-pager
@@ -48,7 +48,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --key-name $KEY_NAME \
     --security-groups $SECURITY_GROUP \
     --user-data "$USER_DATA" \
-    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$SPM_PROJECT-$SPM_ENV-Node20Instance},{Key=project,Value=$SPM_PROJECT},{Key=env,Value=$SPM_ENV}]" \
+    --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$SPM_PROJECT-$SPM_ENV-Node20Instance},{Key=project,Value=$SPM_PROJECT},{Key=env,Value=$SPM_ENV},{Key=managed-by,Value=SPM}]" \
     --query 'Instances[0].InstanceId' \
     --output text \
     --no-cli-pager)
