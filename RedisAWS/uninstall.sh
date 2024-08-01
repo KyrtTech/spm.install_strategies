@@ -1,3 +1,3 @@
 #!/bin/sh
 
-npx cdk destroy --require-approval never
+npx cdk destroy --require-approval never --force
