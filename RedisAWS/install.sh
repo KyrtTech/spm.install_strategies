@@ -1,5 +1,6 @@
 #!/bin/bash
 
+npm install
 npx cdk bootstrap
 npx cdk deploy --require-approval never --outputs-file output.json
 
