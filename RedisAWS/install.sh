@@ -3,8 +3,8 @@
 npx cdk bootstrap
 npx cdk deploy --require-approval never --outputs-file output.json
 
-if [ -z "${SMP_OUTPUT_PATH}" ]; then
-    echo "No output for SMP"
+if [ -z "${SPM_OUTPUT_PATH}" ]; then
+    echo "No output for SPM"
 else
     jq  '{
         output_params: {
@@ -13,5 +13,5 @@ else
             redisHost: .RedisAwsStack.RedisHost,
             redisPassword: .RedisAwsStack.RedisPasswordOutput
         }
-    }' output.json > $SMP_OUTPUT_PATH
+    }' output.json > $SPM_OUTPUT_PATH
 fi

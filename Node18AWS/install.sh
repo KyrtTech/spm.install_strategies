@@ -68,9 +68,9 @@ PUBLIC_IP=$(aws ec2 describe-instances --instance-ids $INSTANCE_ID --query 'Rese
 echo "You can connect to your instance by using this command:"
 echo "ssh -i $KEY_NAME.pem ec2-user@$PUBLIC_IP"
 
-# write to provided env var if available for SMP integration
-if [ -z "${SMP_OUTPUT_PATH}" ]; then
-    echo "No output for SMP"
+# write to provided env var if available for SPM integration
+if [ -z "${SPM_OUTPUT_PATH}" ]; then
+    echo "No output for SPM"
 else
     output_params="{\"output_params\": {
         \"ec2InstanceId\": \"${INSTANCE_ID}\",
@@ -79,5 +79,5 @@ else
         \"sshKey\": \"${KEY_NAME}.pem\"
     }}"
 
-    echo $output_params > "${SMP_OUTPUT_PATH}"
+    echo $output_params > "${SPM_OUTPUT_PATH}"
 fi

@@ -13,14 +13,14 @@ npm install
 nohup npm run dev -- --port 8080 > /dev/null 2>&1 &
 EOF
 
-# write to provided env var if available for SMP integration
-if [ -z "${SMP_OUTPUT_PATH}" ]; then
-    echo "No output for SMP"
+# write to provided env var if available for SPM integration
+if [ -z "${SPM_OUTPUT_PATH}" ]; then
+    echo "No output for SPM"
 else
     output_params="{ \"output_params\": {
         \"url\": \"http://${IP}:8080\"
     }}"
 
-    echo "Saving outputs to ${SMP_OUTPUT_PATH}"
-    echo $output_params > "${SMP_OUTPUT_PATH}"
+    echo "Saving outputs to ${SPM_OUTPUT_PATH}"
+    echo $output_params > "${SPM_OUTPUT_PATH}"
 fi
