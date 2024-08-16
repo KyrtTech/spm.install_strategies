@@ -28,10 +28,11 @@ resource "local_file" "db_info" {
   content  = <<EOL
     {
         "output_params": {
-            "postgresUrl": "${aws_db_instance.postgres.endpoint}",
-            "postgresDBName": "${aws_db_instance.postgres.db_name}",
-            "postgresUsername": "${aws_db_instance.postgres.username}",
-            "postgresPassword": "${aws_db_instance.postgres.password}"
+            "databaseURL": "${aws_db_instance.postgres.address}",
+            "databaseName": "${aws_db_instance.postgres.db_name}",
+            "databaseUsername": "${aws_db_instance.postgres.username}",
+            "databasePassword": "${aws_db_instance.postgres.password}",
+            "databasePort": 5432
         }
     }
 EOL
