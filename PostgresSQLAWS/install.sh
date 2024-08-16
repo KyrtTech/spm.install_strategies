@@ -28,6 +28,19 @@ aws dynamodb create-table \
     --output json \
     --tags Key=managed-by,Value=SPM Key=product,Value=$TF_VAR_PRODUCT Key=env,Value=$TF_VAR_ENV
 
+# Poll the table status until it becomes ACTIVE
+while true; do
+  STATUS=$(aws dynamodb describe-table --table-name "$DYNAMO_DB_TABLE" --region "$REGION" --query "Table.TableStatus" --output text)
+
+  if [ "$STATUS" = "ACTIVE" ]; then
+    echo "DynamoDB table $DYNAMO_DB_TABLE is now ACTIVE."
+    break
+  else
+    echo "Waiting for DynamoDB table $DYNAMO_DB_TABLE to become ACTIVE. Current status: $STATUS"
+    sleep 5  # Wait for 5 seconds before checking again
+  fi
+done
+
 terraform init \
     -backend-config="region=$REGION" \
     -backend-config="bucket=$S3_BUCKET" \
