@@ -3,11 +3,16 @@
 export TF_VAR_PRODUCT=`echo "${SPM_PROJECT:-default-project}" | tr '[:upper:]' '[:lower:]'`
 export TF_VAR_ENV=`echo "${SMP_ENV:-dev}" | tr '[:upper:]' '[:lower:]'`
 export TF_VAR_OUTPUT_FILE=$SPM_OUTPUT_PATH
-export REGION=us-west-2
+export REGION=${AWS_REGION:-us-west-2}
 export S3_BUCKET="$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-state"
 export DYNAMO_DB_TABLE="$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-lock"
 
-aws s3api create-bucket --bucket $S3_BUCKET --region $REGION --create-bucket-configuration LocationConstraint=$REGION
+if [ "$REGION" = "us-east-1" ]; then
+    aws s3api create-bucket --bucket $S3_BUCKET --region $REGION
+else
+    aws s3api create-bucket --bucket $S3_BUCKET --region $REGION --create-bucket-configuration LocationConstraint=$REGION
+fi
+
 aws s3api put-bucket-tagging \
     --bucket $S3_BUCKET \
     --tagging "TagSet=[{Key=managed-by,Value=SPM},{Key=env,Value=$TF_VAR_ENV},{Key=product,Value=$TF_VAR_PRODUCT}]"
