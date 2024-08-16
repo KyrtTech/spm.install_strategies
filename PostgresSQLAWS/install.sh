@@ -7,6 +7,25 @@ export REGION=${AWS_REGION:-us-west-2}
 export S3_BUCKET="$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-state"
 export DYNAMO_DB_TABLE="$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-lock"
 
+retry_command() {
+  local command="$1"
+  local max_retries=5
+  local delay=5
+  local retry_count=0
+
+  until $command
+  do
+    retry_count=$((retry_count+1))
+    if [ $retry_count -ge $max_retries ]; then
+      echo "Command failed after $max_retries attempts."
+      return 1
+    fi
+    echo "Command failed. Attempt $retry_count/$max_retries. Retrying in $delay seconds..."
+    sleep $delay
+  done
+  echo "Command succeeded."
+}
+
 if [ "$REGION" = "us-east-1" ]; then
     aws s3api create-bucket --bucket $S3_BUCKET --region $REGION
 else
@@ -41,9 +60,16 @@ while true; do
   fi
 done
 
+export TF_PLUGIN_TIMEOUT=5m
+
+echo "RUN terraform init"
+
 terraform init \
+    -upgrade \
     -backend-config="region=$REGION" \
     -backend-config="bucket=$S3_BUCKET" \
     -backend-config="dynamodb_table=$DYNAMO_DB_TABLE"
 
-terraform apply -auto-approve
+echo "RUN terraform apply"
+
+retry_command "terraform apply -auto-approve"
