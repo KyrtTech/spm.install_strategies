@@ -24,7 +24,7 @@ terraform {
 provider "local" {}
 
 resource "local_file" "db_info" {
-  filename = "${var.output_file}"
+  filename = "${var.OUTPUT_FILE}"
   content  = <<EOL
     {
         "output_params": {
@@ -39,7 +39,7 @@ EOL
 }
 
 provider "aws" {
-  region = var.region # Replace with your desired AWS region
+  region = var.REGION # Replace with your desired AWS region
 }
 
 resource "random_password" "db_password" {
@@ -90,23 +90,23 @@ resource "aws_security_group" "rds_sg" {
   }
 
   tags = {
-    Name       = "${var.product}-${var.env}-rds-security-group"
+    Name       = "${var.PRODUCT}-${var.ENV}-rds-security-group"
     managed-by = "SPM"
-    env        = var.env
-    product    = var.product
+    env        = var.ENV
+    product    = var.PRODUCT
   }
 }
 
 # Create a DB Subnet Group using default subnets
 resource "aws_db_subnet_group" "rds_subnet_group" {
-  name       = "${var.product}-${var.env}-rds-default-subnet-group"
+  name       = "${var.PRODUCT}-${var.ENV}-rds-default-subnet-group"
   subnet_ids = data.aws_subnets.default.ids
 
   tags = {
-    Name       = "${var.product}-${var.env}-rds-default-subnet-group"
+    Name       = "${var.PRODUCT}-${var.ENV}-rds-default-subnet-group"
     managed-by = "SPM"
-    env        = var.env
-    product    = var.product
+    env        = var.ENV
+    product    = var.PRODUCT
   }
 }
 
@@ -117,7 +117,7 @@ resource "aws_db_instance" "postgres" {
   engine                 = "postgres"
   engine_version         = "16.3" # Replace with your desired version
   instance_class         = "db.t3.micro"
-  db_name                = replace(lower(var.product), "/[^0-9a-z]/", "")
+  db_name                = replace(lower(var.PRODUCT), "/[^0-9a-z]/", "")
   password               = random_password.db_password.result
   username               = random_string.db_username.result
   db_subnet_group_name   = aws_db_subnet_group.rds_subnet_group.name
@@ -126,10 +126,10 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible    = true # Set to false if you don't need public access
 
   tags = {
-    Name       = "${var.product}-${var.env}-rds"
+    Name       = "${var.PRODUCT}-${var.ENV}-rds"
     managed-by = "SPM"
-    env        = var.env
-    product    = var.product
+    env        = var.ENV
+    product    = var.PRODUCT
   }
 }
 

@@ -1,11 +1,12 @@
 #!/bin/bash
 
 export TF_VAR_PRODUCT=`echo "${SPM_PROJECT:-default-project}" | tr '[:upper:]' '[:lower:]'`
-export TF_VAR_ENV=`echo "${SMP_ENV:-dev}" | tr '[:upper:]' '[:lower:]'`
+export TF_VAR_ENV=`echo "${SPM_ENV:-dev}" | tr '[:upper:]' '[:lower:]'`
 export TF_VAR_OUTPUT_FILE=$SPM_OUTPUT_PATH
 export REGION=${AWS_REGION:-us-west-2}
-export S3_BUCKET="$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-state"
-export DYNAMO_DB_TABLE="$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-lock"
+export TF_VAR_REGION=$REGION
+export S3_BUCKET="spm-$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-state"
+export DYNAMO_DB_TABLE="spm-$TF_VAR_PRODUCT-$TF_VAR_ENV-tf-lock"
 
 retry_command() {
   local command="$1"
@@ -63,6 +64,8 @@ done
 export TF_PLUGIN_TIMEOUT=5m
 
 echo "RUN terraform init"
+
+echo "With $REGION, $S3_BUCKET, $DYNAMO_DB_TABLE"
 
 terraform init \
     -upgrade \
