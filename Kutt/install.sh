@@ -13,7 +13,7 @@ cp .example.env .env
 cp ~/update_env.sh .
 chmod +x ./update_env.sh
 ./update_env.sh
-npm run build
+NODE_OPTIONS=--openssl-legacy-provider npm run build
 nohup npm run start -- --port 8080 > /dev/null 2>&1 &
 EOF
 
