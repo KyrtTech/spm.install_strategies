@@ -9,7 +9,7 @@ if [ -z "${SPM_OUTPUT_PATH}" ]; then
 else
     jq  '{
         output_params: {
-            redisPort: (.RedisAwsStack.RedisPort | tonumber),
+            redisPort: .RedisAwsStack.RedisPort,
             redisUsername: .RedisAwsStack.RedisUsernameOutput,
             redisHost: .RedisAwsStack.RedisHost,
             redisPassword: .RedisAwsStack.RedisPasswordOutput
