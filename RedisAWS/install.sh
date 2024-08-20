@@ -14,5 +14,5 @@ else
             redisHost: .RedisAwsStack.RedisHost,
             redisPassword: .RedisAwsStack.RedisPasswordOutput
         }
-    }' output.json > $SPM_OUTPUT_PATH
+    }' output.json > "${SPM_OUTPUT_PATH}"
 fi
