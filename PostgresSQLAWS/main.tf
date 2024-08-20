@@ -32,7 +32,7 @@ resource "local_file" "db_info" {
             "databaseName": "${aws_db_instance.postgres.db_name}",
             "databaseUsername": "${aws_db_instance.postgres.username}",
             "databasePassword": "${aws_db_instance.postgres.password}",
-            "databasePort": 5432
+            "databasePort": "5432"
         }
     }
 EOL
