@@ -25,5 +25,6 @@ update_config() {
 }
 
 for key in "${!env_vars[@]}"; do
-    update_config "${env_vars[$key]}" "$key"
+    value=$(eval echo \$$key)
+    update_config "${env_vars[$key]}" "$value"
 done
