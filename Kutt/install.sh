@@ -4,7 +4,7 @@ if [ -n "update_env.sh" ]; then
     scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "update_env.sh" "$SSH_CONNECTION_STRING":~/update_env.sh
 fi
 
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o \
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     $SSH_CONNECTION_STRING \
     -i $SSH_KEY \
     "DOWNLOAD_URL='$DOWNLOAD_URL'" \
