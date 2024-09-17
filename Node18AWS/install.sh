@@ -2,7 +2,7 @@
 
 # Function to extract numeric value from disk size (e.g., "50GB" -> "50")
 function extract_disk_size() {
-  echo "$1" | grep -oP '^\d+'
+  echo "$1" | sed -E 's/[^0-9]//g'
 }
 
 # Map the number of vCPUs to EC2 instance types
