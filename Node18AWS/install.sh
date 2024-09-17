@@ -1,7 +1,28 @@
 #!/bin/bash
 
+# Function to extract numeric value from disk size (e.g., "50GB" -> "50")
+function extract_disk_size() {
+  echo "$1" | grep -oP '^\d+'
+}
+
+# Map the number of vCPUs to EC2 instance types
+function get_instance_type() {
+  case "$1" in
+    1) echo "t3.micro";;        # 1 vCPUs
+    2) echo "t3.small";;         # 2 vCPUs
+    4) echo "t3.medium";;        # 4 vCPUs
+    8) echo "m5.large";;         # 8 vCPUs
+    16) echo "m5.xlarge";;       # 16 vCPUs
+    32) echo "m5.2xlarge";;      # 32 vCPUs
+    64) echo "m5.4xlarge";;      # 64 vCPUs
+    96) echo "c5.12xlarge";;     # 96 vCPUs
+    *) echo "t3.micro";;         # Default to t3.micro
+  esac
+}
+
 # Variables
-INSTANCE_TYPE="t2.micro"
+INSTANCE_TYPE=$(get_instance_type "${SPM_V_CPU:-1}")
+DISK_SIZE=$(extract_disk_size "${SPM_STORAGE:-8}")
 AMI_ID="ami-0f403e3180720dd7e"
 KEY_NAME="$SPM_PROJECT-$SPM_ENV-KeyPairForNodeJS"
 SECURITY_GROUP="$SPM_PROJECT-$SPM_ENV-SGForNodeJS"
@@ -48,6 +69,7 @@ INSTANCE_ID=$(aws ec2 run-instances \
     --key-name $KEY_NAME \
     --security-groups $SECURITY_GROUP \
     --user-data "$USER_DATA" \
+    --block-device-mappings "[{\"DeviceName\":\"/dev/xvda\",\"Ebs\":{\"VolumeSize\":$DISK_SIZE}}]" \
     --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$SPM_PROJECT-$SPM_ENV-Node18Instance},{Key=project,Value=$SPM_PROJECT},{Key=env,Value=$SPM_ENV},{Key=managed-by,Value=SPM}]" \
     --query 'Instances[0].InstanceId' \
     --output text \
