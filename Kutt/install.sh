@@ -4,7 +4,20 @@ if [ -n "update_env.sh" ]; then
     scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "update_env.sh" "$SSH_CONNECTION_STRING":~/update_env.sh
 fi
 
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o SendEnv="REDIS_PORT REDIS_USERNAME REDIS_HOST REDIS_PASSWORD DATABASE_URL DATABASE_NAME DATABASE_USERNAME DATABASE_PASSWORD DATABASE_PORT" $SSH_CONNECTION_STRING -i $SSH_KEY "DOWNLOAD_URL='$DOWNLOAD_URL'" 'bash -s' <<'EOF'
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o \
+    $SSH_CONNECTION_STRING \
+    -i $SSH_KEY \
+    "DOWNLOAD_URL='$DOWNLOAD_URL'" \
+    "REDIS_PORT='$REDIS_PORT'" \
+    "REDIS_USERNAME='$REDIS_USERNAME'" \
+    "REDIS_HOST='$REDIS_HOST'" \
+    "REDIS_PASSWORD='$REDIS_PASSWORD'" \
+    "DATABASE_URL='$DATABASE_URL'" \
+    "DATABASE_NAME='$DATABASE_NAME'" \
+    "DATABASE_USERNAME='$DATABASE_USERNAME'" \
+    "DATABASE_PASSWORD='$DATABASE_PASSWORD'" \
+    "DATABASE_PORT='$DATABASE_PORT'" \
+    'bash -s' <<'EOF'
 curl -o kutt.zip -L $DOWNLOAD_URL
 unzip kutt.zip -d app
 cd app/$(ls app)
