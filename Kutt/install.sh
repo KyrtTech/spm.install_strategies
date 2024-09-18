@@ -4,6 +4,14 @@ if [ -n "update_env.sh" ]; then
     scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "update_env.sh" "$SSH_CONNECTION_STRING":~/update_env.sh
 fi
 
+if [ -n "knex.ts "]; then
+    scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "knex.ts" "$SSH_CONNECTION_STRING":~/knex.ts
+fi
+
+if [ -n "migration.ts "]; then
+    scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "knex.ts" "$SSH_CONNECTION_STRING":~/migration.ts
+fi
+
 ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     $SSH_CONNECTION_STRING \
     -i $SSH_KEY \
@@ -22,8 +30,11 @@ curl -o kutt.zip -L $DOWNLOAD_URL
 unzip kutt.zip -d app
 cd app/$(ls app)
 npm install
+wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
 cp .example.env .env
 cp ~/update_env.sh .
+cp ~/knex.ts ./server/knex.ts
+cp ~/migration.ts ./knexfile.ts
 chmod +x ./update_env.sh
 ./update_env.sh
 NODE_OPTIONS=--openssl-legacy-provider npm run build
