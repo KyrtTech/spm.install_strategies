@@ -3,7 +3,7 @@ CONFIG_FILE=".env"
 
 declare -A env_vars=(
     ["DATABASE_PORT"]="DB_PORT"
-    ["DATABASE_HOST"]="DB_HOST"
+    ["DATABASE_URL"]="DB_HOST"
     ["DATABASE_PASSWORD"]="DB_PASSWORD"
     ["DATABASE_NAME"]="DB_NAME"
     ["DATABASE_USERNAME"]="DB_USER"
