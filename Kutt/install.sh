@@ -25,6 +25,7 @@ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     "DATABASE_USERNAME='$DATABASE_USERNAME'" \
     "DATABASE_PASSWORD='$DATABASE_PASSWORD'" \
     "DATABASE_PORT='$DATABASE_PORT'" \
+    "DEFAULT_DOMAIN='$DOMAIN_OR_IP:$PORT'" \
     'bash -s' <<'EOF'
 curl -o kutt.zip -L $DOWNLOAD_URL
 unzip kutt.zip -d app

@@ -11,6 +11,7 @@ declare -A env_vars=(
     ["REDIS_PORT"]="REDIS_PORT"
     ["REDIS_PASSWORD"]="REDIS_PASSWORD"
     ["PORT"]="PORT"
+    ["DEFAULT_DOMAIN"]="DEFAULT_DOMAIN"
 )
 
 export PORT=8080
