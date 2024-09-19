@@ -4,11 +4,11 @@ if [ -n "update_env.sh" ]; then
     scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "update_env.sh" "$SSH_CONNECTION_STRING":~/update_env.sh
 fi
 
-if [ -n "knex.ts "]; then
+if [ -n "knex.ts" ]; then
     scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "knex.ts" "$SSH_CONNECTION_STRING":~/knex.ts
 fi
 
-if [ -n "migration.ts "]; then
+if [ -n "migration.ts" ]; then
     scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i $SSH_KEY "knex.ts" "$SSH_CONNECTION_STRING":~/migration.ts
 fi
 
