@@ -25,7 +25,7 @@ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
     "DATABASE_USERNAME='$DATABASE_USERNAME'" \
     "DATABASE_PASSWORD='$DATABASE_PASSWORD'" \
     "DATABASE_PORT='$DATABASE_PORT'" \
-    "DEFAULT_DOMAIN='$DOMAIN_OR_IP:$PORT'" \
+    "DEFAULT_DOMAIN='$KUTT_AWS_DOMAIN_OR_IP:$KUTT_AWS_PORT'" \
     'bash -s' <<'EOF'
 curl -o kutt.zip -L $DOWNLOAD_URL
 unzip kutt.zip -d app
