@@ -48,7 +48,7 @@ resource "random_password" "db_password" {
   upper            = true
   lower            = true
   numeric          = true
-  override_special = "!#$%&()*+,-.:;<=>?[]^_{|}~"
+  override_special = "!#$%&()*+,-.:;<=>?[]^_{}~"
 }
 
 resource "random_string" "db_username" {
