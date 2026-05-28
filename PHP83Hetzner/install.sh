@@ -4,7 +4,7 @@ set -euo pipefail
 PROJECT=$(echo "${SPM_PROJECT:-spm}" | tr '[:upper:]' '[:lower:]')
 ENVIRONMENT=$(echo "${SPM_ENV:-dev}" | tr '[:upper:]' '[:lower:]')
 LOCATION="${PHP83_HETZNER_LOCATION:-fsn1}"
-SERVER_TYPE="${HCLOUD_SERVER_TYPE:-cx22}"
+SERVER_TYPE="${HCLOUD_SERVER_TYPE:-cx23}"
 IMAGE="${HCLOUD_IMAGE:-ubuntu-24.04}"
 RUN_ID=$(date +%Y%m%d%H%M%S)
 SERVER_NAME="${PROJECT}-${ENVIRONMENT}-php83-${RUN_ID}"
